@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import logoUrl from './logo.png';
 import { 
   Users, 
   Info, 
@@ -24,6 +25,14 @@ import {
 
 // --- Components ---
 
+const Logo = ({ className = "" }: { className?: string }) => (
+  <img 
+    src={logoUrl} 
+    alt="The Co-exist Pitch Logo" 
+    className={`${className} object-contain`}
+  />
+);
+
 const Navbar = ({ activeSection, setActiveSection }: { activeSection: string, setActiveSection: (s: string) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navItems = [
@@ -38,10 +47,8 @@ const Navbar = ({ activeSection, setActiveSection }: { activeSection: string, se
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-zinc-200">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveSection('home')}>
-          <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center text-white font-bold">
-            C
-          </div>
-          <span className="font-bold text-xl tracking-tight text-emerald-900">Co-exist Pitch</span>
+          <Logo className="w-8 h-8" />
+          <span className="font-bold text-xl tracking-tight text-emerald-900 hidden sm:inline">Co-exist Pitch</span>
         </div>
 
         {/* Desktop Nav */}
@@ -210,7 +217,7 @@ export default function App() {
                 <Zap className="w-5 h-5 fill-emerald-400" />
                 <span className="text-sm font-bold tracking-widest uppercase">Beginner's Corner</span>
               </div>
-              <h3 className="text-3xl font-bold mb-4">Football 101: Confidence Tips</h3>
+              <h3 className="text-3xl font-bold mb-4">Football Beginners: Confidence Tips</h3>
               <p className="text-emerald-100/70 mb-8 max-w-md">"You don't need to be a pro, you just need a desire to run. Let rules no longer be an obstacle."</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-auto">
                 <div className="flex gap-4">
@@ -385,9 +392,9 @@ export default function App() {
         </div>
 
         <div className="mt-24 pt-12 border-t border-zinc-800 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center text-white font-bold">C</div>
-            <span className="font-bold tracking-tight">THE CO-EXIST PITCH</span>
+          <div className="flex items-center gap-3">
+            <Logo className="w-10 h-10" />
+            <span className="font-bold tracking-tight text-lg text-white">THE CO-EXIST PITCH</span>
           </div>
           <p className="text-zinc-600 text-sm">© 2026 Algorithm Club WLSA. Shared Vision for Sports Fairness.</p>
         </div>
