@@ -47,7 +47,7 @@ const Navbar = ({ activeSection, setActiveSection }: { activeSection: string, se
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-zinc-200">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveSection('home')}>
-          <Logo className="w-8 h-8" />
+          <Logo className="w-12 h-12" />
           <span className="font-bold text-xl tracking-tight text-emerald-900 hidden sm:inline">Co-exist Pitch</span>
         </div>
 
@@ -393,7 +393,7 @@ export default function App() {
 
         <div className="mt-24 pt-12 border-t border-zinc-800 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <Logo className="w-10 h-10" />
+            <Logo className="w-16 h-16" />
             <span className="font-bold tracking-tight text-lg text-white">THE CO-EXIST PITCH</span>
           </div>
           <p className="text-zinc-600 text-sm">© 2026 Algorithm Club WLSA. Shared Vision for Sports Fairness.</p>
