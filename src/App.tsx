@@ -333,18 +333,17 @@ export default function App() {
           </div>
 
           <div className="lg:col-span-7">
-            <div className="aspect-video bg-zinc-900 rounded-[2rem] overflow-hidden group cursor-pointer relative">
+            <div className="aspect-video bg-zinc-900 rounded-[2rem] overflow-hidden relative shadow-2xl shadow-emerald-900/20">
               <img 
                 src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=1200" 
-                className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" 
-                alt="Educational Video"
+                className="w-full h-full object-cover" 
+                alt="Educational Gallery"
+                referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <PlayCircle className="w-20 h-20 text-white opacity-80 group-hover:opacity-100 transition-opacity" />
-              </div>
-              <div className="absolute bottom-6 left-6 right-6">
-                <p className="text-white font-bold text-xl uppercase tracking-widest">Educational Video Gallery</p>
-                <p className="text-white/60 text-sm">Gender fairness in sports culture.</p>
+              <div className="absolute inset-0 bg-linear-to-t from-zinc-900/80 via-transparent to-transparent" />
+              <div className="absolute bottom-8 left-8 right-8">
+                <p className="text-white font-bold text-2xl uppercase tracking-widest mb-1">Educational Gallery</p>
+                <p className="text-white/70 text-lg">Promoting gender fairness in campus sports.</p>
               </div>
             </div>
           </div>
@@ -356,10 +355,6 @@ export default function App() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 py-12">
           <div className="lg:col-span-7">
             <h2 className="text-4xl font-bold mb-8">Why "Co-exist Pitch"?</h2>
-            <p className="text-zinc-400 text-lg leading-relaxed mb-8">
-              On our school soccer pitch, there is a clear gender imbalance in resource utilization. 
-              Observations, independently confirmed by ten of my fellow students, show that while the center is dominated by high-intensity male matches, female students are often relegated to the sidelines.
-            </p>
             <p className="text-zinc-400 text-lg leading-relaxed">
               This is not just about space; it is about social comfort. Many girls feel shy or self-conscious about accidental physical contact and the "performance pressure" of playing with experienced boys. 
               This issue limits girls' opportunities to stay active and reinforces the stereotype that competitive sports are a male domain.
