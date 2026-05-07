@@ -115,13 +115,109 @@ const SectionContainer = ({ id, children, className = "" }: { id: string, childr
 export default function App() {
   const [activeSection, setActiveSection] = useState('home');
 
+  const interviews = [
+    {
+      name: "Ricky Xu",
+      role: "Year 10 Student",
+      quote: "I used to stay on the sidelines because I felt I wasn't 'good enough'. This pitch changed that vibe."
+    },
+    {
+      name: "Sarah L.",
+      role: "Year 11 Student",
+      quote: "The 'performance pressure' is real. Having a space where it's okay to just 'be a beginner' is so refreshing and inclusive."
+    },
+    {
+      name: "Alex T.",
+      role: "Year 9 Student",
+      quote: "I love soccer, but sometimes high-intensity matches feel more like a battle. Co-exist Pitch lets us focus on the joy of the game."
+    },
+    {
+      name: "Leo K.",
+      role: "Year 12 Student",
+      quote: "Respecting the 'No-Contact' rule has actually made me a better technical player. It's about skill, not just strength."
+    },
+    {
+      name: "Mia Z.",
+      role: "Year 10 Student",
+      quote: "It's about belonging. I don't have to apologize for missing a pass here. We're all here to learn and co-exist."
+    },
+    {
+      name: "Jason D.",
+      role: "Year 11 Student",
+      quote: "Changing the culture of the pitch starts with small rules. 'No-contact' opens the game up to so many more people."
+    }
+  ];
+
   // Scroll to section when activeSection changes (if triggered by nav)
   useEffect(() => {
-    const el = document.getElementById(activeSection);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+    if (activeSection !== 'interviews') {
+      const el = document.getElementById(activeSection);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [activeSection]);
+
+  if (activeSection === 'interviews') {
+    return (
+      <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden pt-16">
+        <Navbar activeSection="hub" setActiveSection={setActiveSection} />
+        
+        <SectionContainer id="interviews-gallery" className="min-h-screen">
+          <div className="mb-16">
+            <button 
+              onClick={() => setActiveSection('hub')}
+              className="group flex items-center gap-2 text-zinc-400 hover:text-emerald-600 transition-colors mb-8 text-sm font-medium"
+            >
+              <Zap className="w-4 h-4 rotate-180" /> Back to Hub
+            </button>
+            <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-4">Student Stories</h1>
+            <p className="text-xl text-zinc-500 max-w-2xl">Voices from the pitch — hearing from those who are helping redefine our sports culture.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {interviews.map((item, idx) => (
+              <motion.div 
+                key={item.name}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                className="p-10 bg-white border border-emerald-100 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-emerald-900/5 transition-all duration-500"
+              >
+                <Quote className="w-10 h-10 text-emerald-400 mb-6" />
+                <p className="text-xl text-zinc-800 mb-10 font-medium leading-relaxed italic">"{item.quote}"</p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-zinc-100 rounded-full flex-none" />
+                  <div>
+                    <p className="font-bold text-lg text-zinc-900">{item.name}</p>
+                    <p className="text-sm text-zinc-400">{item.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </SectionContainer>
+
+        {/* Footer for Interview Page */}
+        <div className="bg-zinc-900 py-24 px-6 text-white rounded-t-[4rem]">
+          <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex items-center gap-3">
+              <Logo className="w-12 h-12" />
+              <span className="font-bold tracking-tight text-lg">THE CO-EXIST PITCH</span>
+            </div>
+            <button 
+              onClick={() => setActiveSection('home')}
+              className="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-full font-bold transition-all"
+            >
+              Return Home
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden">
@@ -204,7 +300,7 @@ export default function App() {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-zinc-200 rounded-full" />
               <div>
-                <p className="font-bold text-sm text-zinc-900">Sarah W.</p>
+                <p className="font-bold text-sm text-zinc-900">Ricky Xu</p>
                 <p className="text-xs text-zinc-400">Year 10 Student</p>
               </div>
             </div>
@@ -233,11 +329,16 @@ export default function App() {
             <BookOpen className="absolute -bottom-10 -right-10 w-64 h-64 text-emerald-800 opacity-20 pointer-events-none" />
           </div>
 
-          {/* More stories... */}
-          <div className="p-8 bg-zinc-100 rounded-3xl flex items-center justify-center text-center">
+          {/* More stories link */}
+          <div className="p-8 bg-zinc-100 rounded-[2.5rem] flex items-center justify-center text-center border-2 border-dashed border-zinc-200">
             <div>
               <p className="text-zinc-400 text-sm mb-4">10+ more student stories</p>
-              <button className="text-emerald-600 font-bold hover:underline">Read full interviews</button>
+              <button 
+                onClick={() => setActiveSection('interviews')}
+                className="text-emerald-600 font-bold hover:text-emerald-700 transition-colors text-lg"
+              >
+                Read full interviews
+              </button>
             </div>
           </div>
         </div>
@@ -355,6 +456,10 @@ export default function App() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 py-12">
           <div className="lg:col-span-7">
             <h2 className="text-4xl font-bold mb-8">Why "Co-exist Pitch"?</h2>
+            <p className="text-zinc-400 text-lg leading-relaxed mb-8">
+              On our school soccer pitch, there is a clear gender imbalance in resource utilization. 
+              Observations, independently confirmed by ten of my fellow students, show that while the center is dominated by high-intensity male matches, female students are often relegated to the sidelines.
+            </p>
             <p className="text-zinc-400 text-lg leading-relaxed">
               This is not just about space; it is about social comfort. Many girls feel shy or self-conscious about accidental physical contact and the "performance pressure" of playing with experienced boys. 
               This issue limits girls' opportunities to stay active and reinforces the stereotype that competitive sports are a male domain.
@@ -391,7 +496,6 @@ export default function App() {
             <Logo className="w-16 h-16" />
             <span className="font-bold tracking-tight text-lg text-white">THE CO-EXIST PITCH</span>
           </div>
-          <p className="text-zinc-600 text-sm">© 2026 Algorithm Club WLSA. Shared Vision for Sports Fairness.</p>
         </div>
       </SectionContainer>
     </div>
