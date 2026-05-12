@@ -122,28 +122,28 @@ export default function App() {
       quote: "I used to stay on the sidelines because I felt I wasn't 'good enough'. This pitch changed that vibe."
     },
     {
-      name: "Sarah L.",
-      role: "Year 11 Student",
+      name: "Oscar R.",
+      role: "Year 10 Student",
       quote: "The 'performance pressure' is real. Having a space where it's okay to just 'be a beginner' is so refreshing and inclusive."
     },
     {
-      name: "Alex T.",
-      role: "Year 9 Student",
+      name: "Oliver C.",
+      role: "Year 10 Student",
       quote: "I love soccer, but sometimes high-intensity matches feel more like a battle. Co-exist Pitch lets us focus on the joy of the game."
     },
     {
-      name: "Leo K.",
-      role: "Year 12 Student",
+      name: " Joshua Z.",
+      role: "Year 10 Student",
       quote: "Respecting the 'No-Contact' rule has actually made me a better technical player. It's about skill, not just strength."
     },
     {
-      name: "Mia Z.",
+      name: "Leo R.",
       role: "Year 10 Student",
       quote: "It's about belonging. I don't have to apologize for missing a pass here. We're all here to learn and co-exist."
     },
     {
-      name: "Jason D.",
-      role: "Year 11 Student",
+      name: "Kevin G.",
+      role: "Year 10 Student",
       quote: "Changing the culture of the pitch starts with small rules. 'No-contact' opens the game up to so many more people."
     }
   ];
@@ -332,7 +332,7 @@ export default function App() {
           {/* More stories link */}
           <div className="p-8 bg-zinc-100 rounded-[2.5rem] flex items-center justify-center text-center border-2 border-dashed border-zinc-200">
             <div>
-              <p className="text-zinc-400 text-sm mb-4">10+ more student stories</p>
+              <p className="text-zinc-400 text-sm mb-4">5+ more student stories</p>
               <button 
                 onClick={() => setActiveSection('interviews')}
                 className="text-emerald-600 font-bold hover:text-emerald-700 transition-colors text-lg"
@@ -471,20 +471,16 @@ export default function App() {
               <h3 className="font-bold text-emerald-400 mb-6 uppercase tracking-widest text-xs">The Team Credits</h3>
               <div className="grid grid-cols-2 gap-y-6">
                 <div>
-                  <p className="text-white font-bold">Joshua</p>
+                  <p className="text-white font-bold">Joshua Z.</p>
                   <p className="text-zinc-500 text-xs">Build & Navigation</p>
                 </div>
                 <div>
-                  <p className="text-white font-bold">Jack</p>
+                  <p className="text-white font-bold">Leo R.</p>
                   <p className="text-zinc-500 text-xs">Content Specialist</p>
                 </div>
                 <div>
-                  <p className="text-white font-bold">Kye</p>
-                  <p className="text-zinc-500 text-xs">UI Copywriting</p>
-                </div>
-                <div>
-                  <p className="text-white font-bold">Oliver</p>
-                  <p className="text-zinc-500 text-xs">Design & Logo</p>
+                  <p className="text-white font-bold">Kevin G.</p>
+                  <p className="text-zinc-500 text-xs">UI & Research</p>
                 </div>
               </div>
             </div>
