@@ -22,6 +22,8 @@ import {
   BookOpen,
   Quote
 } from 'lucide-react';
+import fieldImg from './field.JPG';
+import humanImg from './human.png';
 
 // --- Components ---
 
@@ -189,7 +191,12 @@ export default function App() {
                 <Quote className="w-10 h-10 text-emerald-400 mb-6" />
                 <p className="text-xl text-zinc-800 mb-10 font-medium leading-relaxed italic">"{item.quote}"</p>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-zinc-100 rounded-full flex-none" />
+                   <img 
+                    src={humanImg} 
+                    alt="Avatar"
+                    className="w-12 h-12 rounded-full flex-none object-cover"
+                    referrerPolicy="no-referrer"
+                  />
                   <div>
                     <p className="font-bold text-lg text-zinc-900">{item.name}</p>
                     <p className="text-sm text-zinc-400">{item.role}</p>
@@ -298,7 +305,12 @@ export default function App() {
             <Quote className="w-8 h-8 text-emerald-300 mb-4" />
             <p className="text-lg text-zinc-700 mb-6 font-medium">"I used to stay on the sidelines because I felt I wasn't 'good enough'. This pitch changed that vibe."</p>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-zinc-200 rounded-full" />
+              <img 
+                src={humanImg} 
+                alt="Avatar"
+                className="w-10 h-10 rounded-full object-cover"
+                referrerPolicy="no-referrer"
+              />
               <div>
                 <p className="font-bold text-sm text-zinc-900">Ricky Xu</p>
                 <p className="text-xs text-zinc-400">Year 10 Student</p>
@@ -436,10 +448,9 @@ export default function App() {
           <div className="lg:col-span-7">
             <div className="aspect-video bg-zinc-900 rounded-[2rem] overflow-hidden relative shadow-2xl shadow-emerald-900/20">
               <img 
-                src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=1200" 
+                src={fieldImg} 
                 className="w-full h-full object-cover" 
                 alt="Educational Gallery"
-                referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-linear-to-t from-zinc-900/80 via-transparent to-transparent" />
               <div className="absolute bottom-8 left-8 right-8">
@@ -471,16 +482,20 @@ export default function App() {
               <h3 className="font-bold text-emerald-400 mb-6 uppercase tracking-widest text-xs">The Team Credits</h3>
               <div className="grid grid-cols-2 gap-y-6">
                 <div>
-                  <p className="text-white font-bold">Joshua Z.</p>
+                  <p className="text-white font-bold">Joshua</p>
                   <p className="text-zinc-500 text-xs">Build & Navigation</p>
                 </div>
                 <div>
-                  <p className="text-white font-bold">Leo R.</p>
+                  <p className="text-white font-bold">Jack</p>
                   <p className="text-zinc-500 text-xs">Content Specialist</p>
                 </div>
                 <div>
-                  <p className="text-white font-bold">Kevin G.</p>
-                  <p className="text-zinc-500 text-xs">UI & Research</p>
+                  <p className="text-white font-bold">Kye</p>
+                  <p className="text-zinc-500 text-xs">UI Copywriting</p>
+                </div>
+                <div>
+                  <p className="text-white font-bold">Oliver</p>
+                  <p className="text-zinc-500 text-xs">Design & Logo</p>
                 </div>
               </div>
             </div>
