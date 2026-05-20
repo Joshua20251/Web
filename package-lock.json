@@ -1,6 +1,0 @@
-{
-  "name": "Co-exist Pitch",
-  "description": "A platform dedicated to creating an inclusive, gender-balanced soccer pitch culture in schools.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
