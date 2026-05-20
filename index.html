@@ -1,13 +1,35 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Co-exist Pitch</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
-
+{
+  "entities": {
+    "feedback": {
+      "title": "Feedback",
+      "description": "An anonymous feedback submission.",
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "The feedback message."
+        },
+        "atmosphere": {
+          "type": "string",
+          "description": "User's perception of the pitch atmosphere."
+        },
+        "issue": {
+          "type": "string",
+          "description": "Specific issue reported."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the feedback was submitted."
+        }
+      },
+      "required": ["content", "atmosphere", "issue", "createdAt"]
+    }
+  },
+  "firestore": {
+    "feedbacks": {
+      "schema": "feedback",
+      "description": "Collection of anonymous feedbacks."
+    }
+  }
+}

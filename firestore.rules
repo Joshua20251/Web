@@ -1,43 +1,10 @@
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // 1. Global Safety Net
-    match /{document=**} {
-      allow read, write: if false;
-    }
-
-    // --- PRIMITIVES ---
-    function isSignedIn() { return request.auth != null; }
-    function isAdmin() { 
-      return isSignedIn() && (
-        request.auth.token.email == 'joshua917813@gmail.com' && 
-        request.auth.token.email_verified == true
-      );
-    }
-    function incoming() { return request.resource.data; }
-    function existing() { return resource.data; }
-    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_-]+$'); }
-
-    // --- ENTITY VALIDATION ---
-    function isValidFeedback(data) {
-      return data.keys().hasAll(['content', 'atmosphere', 'issue', 'createdAt']) &&
-             data.keys().size() == 4 &&
-             data.content is string && data.content.size() >= 1 && data.content.size() <= 2000 &&
-             data.atmosphere is string && data.atmosphere.size() >= 1 && data.atmosphere.size() <= 500 &&
-             data.issue is string && data.issue.size() >= 1 && data.issue.size() <= 1000 &&
-             data.createdAt == request.time;
-    }
-
-    // --- MATCH BLOCKS ---
-    match /feedbacks/{feedbackId} {
-      allow create: if isValidFeedback(incoming());
-      allow get, list: if isAdmin();
-      // No updates or deletes allowed for feedback
-    }
-
-    // Test connection doc (Validation helper as per skill)
-    match /test/connection {
-      allow get: if true;
-    }
-  }
+{
+  "projectId": "the-co-exist-pitch",
+  "appId": "1:484809609741:web:b163cad6dd932f2e823b44",
+  "apiKey": "AIzaSyCUV2f1abHg5zPHCt8s4x08wKRS4EM6hJ8",
+  "authDomain": "the-co-exist-pitch.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-39bbf0d3-208a-48c9-8423-699d6c00f997",
+  "storageBucket": "the-co-exist-pitch.firebasestorage.app",
+  "messagingSenderId": "484809609741",
+  "measurementId": ""
 }
