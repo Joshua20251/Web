@@ -20,10 +20,16 @@ import {
   Heart,
   Zap,
   BookOpen,
-  Quote
+  Quote,
+  Lock,
+  LogOut,
+  Trash2
 } from 'lucide-react';
 import fieldImg from './field.JPG';
+import field2Img from './field2.png';
 import humanImg from './human.png';
+import { submitFeedback, auth, signIn, subscribeToFeedbacks } from './services/firebase';
+import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 
 // --- Components ---
 
@@ -39,9 +45,11 @@ const Navbar = ({ activeSection, setActiveSection }: { activeSection: string, se
   const [isOpen, setIsOpen] = useState(false);
   const navItems = [
     { id: 'home', label: 'Home' },
+    { id: 'why', label: 'Why' },
+    { id: 'mission', label: 'Mission' },
+    { id: 'solutions', label: 'Solutions' },
     { id: 'hub', label: 'Hub' },
     { id: 'feedback', label: 'Feedback' },
-    { id: 'awareness', label: 'Awareness' },
     { id: 'about', label: 'About' }
   ];
 
@@ -116,6 +124,63 @@ const SectionContainer = ({ id, children, className = "" }: { id: string, childr
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('home');
+  const [user, setUser] = useState<User | null>(null);
+  const [feedbacks, setFeedbacks] = useState<any[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedbackSuccess, setFeedbackSuccess] = useState(false);
+
+  // Form State
+  const [atmosphere, setAtmosphere] = useState('Welcoming');
+  const [content, setContent] = useState('');
+  const [issue, setIssue] = useState('');
+
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  const handleSignIn = async () => {
+    setAuthError(null);
+    try {
+      await signIn();
+    } catch (error: any) {
+      console.error(error);
+      setAuthError(error.message || 'Failed to sign in');
+    }
+  };
+
+  useEffect(() => {
+    if (!auth) return;
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+    });
+    return () => unsub();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      const unsub = subscribeToFeedbacks((data) => {
+        setFeedbacks(data);
+      });
+      return () => unsub();
+    }
+  }, [user]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!content.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      await submitFeedback(content, atmosphere, issue);
+      setFeedbackSuccess(true);
+      setContent('');
+      setIssue('');
+      setTimeout(() => setFeedbackSuccess(false), 5000);
+    } catch (error) {
+      console.error(error);
+      alert("Submission failed. Make sure Firebase is set up.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const interviews = [
     {
@@ -276,6 +341,95 @@ export default function App() {
         </div>
       </section>
 
+      {/* Why Section */}
+      <SectionContainer id="why" className="bg-white overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-6">
+                The Motivation
+              </span>
+              <h2 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 leading-tight">
+                Why <span className="text-zinc-900 font-serif italic">"Co-exist Pitch"</span>?
+              </h2>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="space-y-6 text-xl text-zinc-600 leading-relaxed font-light"
+            >
+              <p>
+                On our school soccer pitch, there is a clear <span className="text-emerald-600 font-bold">gender imbalance</span> in resource utilization. 
+                Observations, independently confirmed by <span className="text-zinc-900 font-bold">ten of my fellow students</span>, show that while the center is dominated by high-intensity male matches, female students are often relegated to the sidelines.
+              </p>
+              <p>
+                This is not just about space; it is about <span className="text-emerald-600 font-bold italic">social comfort</span>. Many girls feel shy or self-conscious about accidental physical contact and the "performance pressure" of playing with experienced boys.
+              </p>
+              <p className="text-zinc-400 text-lg border-l-2 border-emerald-100 pl-6 italic">
+                This issue limits girls' opportunities to stay active and reinforces the stereotype that competitive sports are a male domain.
+              </p>
+            </motion.div>
+          </div>
+          
+          <motion.div 
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+             {/* Decorative blob */}
+             <div className="absolute -top-20 -right-20 w-80 h-80 bg-emerald-100 rounded-full blur-3xl opacity-50" />
+             
+             <div className="relative group flex flex-col gap-4">
+                {/* Main Large Image */}
+                <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-zinc-200 group-hover:scale-[1.02] transition-transform duration-700">
+                  <img 
+                    src={fieldImg} 
+                    alt="The School Pitch Main View" 
+                    className="w-full aspect-video object-cover"
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-emerald-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+
+                {/* Staggered Second Image */}
+                <div className="grid grid-cols-2 gap-4">
+                   <div className="relative rounded-3xl overflow-hidden shadow-xl border border-zinc-200 group-hover:translate-x-2 transition-transform duration-700">
+                      <img 
+                        src={field2Img} 
+                        alt="The School Pitch Alternative View" 
+                        className="w-full aspect-square object-cover"
+                      />
+                   </div>
+                   
+                   {/* Stats badge integrated into the layout */}
+                   <motion.div 
+                    initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4 }}
+                    className="bg-white p-6 rounded-[2rem] shadow-xl shadow-emerald-900/10 border border-emerald-50 border-t-emerald-200 flex flex-col justify-center items-center text-center gap-3 transition-transform duration-700 group-hover:-translate-x-2"
+                  >
+                    <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center text-white rotate-3">
+                      <Users className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <p className="text-[10px] uppercase font-black text-emerald-600 tracking-widest mb-0.5">Community Report</p>
+                        <p className="text-xl font-black text-zinc-900 tracking-tighter">10+ Witnesses</p>
+                    </div>
+                  </motion.div>
+                </div>
+             </div>
+          </motion.div>
+        </div>
+      </SectionContainer>
+
       {/* Mission Statement */}
       <SectionContainer id="mission" className="bg-white border-y border-zinc-200 text-center">
         <div className="max-w-3xl mx-auto">
@@ -284,6 +438,108 @@ export default function App() {
           <p className="text-2xl text-zinc-600 font-light italic leading-relaxed">
             "Every goal deserves to be celebrated. We are committed to creating a mixed-gender pitch without 'performance pressure', allowing everyone to find the joy of sports here."
           </p>
+        </div>
+      </SectionContainer>
+
+      {/* --- THE CO-EXIST SOLUTION (Measures) --- */}
+      <SectionContainer id="solutions" className="bg-emerald-950 text-white rounded-[4rem] my-12 overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-emerald-900/20 skew-x-12 translate-x-32" />
+        
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-8">
+            <Zap className="w-6 h-6 text-emerald-400 fill-emerald-400" />
+            <span className="text-emerald-400 font-black uppercase tracking-widest text-sm">Key Measures</span>
+          </div>
+          
+          <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-16 leading-[1.1]">
+            Our <span className="text-emerald-400 font-serif italic">Solution</span> for<br />
+            a Better Pitch.
+          </h2>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Rule 1: No-Contact */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="p-8 bg-emerald-900/40 backdrop-blur-sm border border-emerald-500/20 rounded-[2.5rem] group hover:bg-emerald-800/50 transition-colors"
+            >
+              <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-8 rotate-3 group-hover:rotate-6 transition-transform">
+                <ShieldCheck className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">"No-Contact" Play</h3>
+              <p className="text-emerald-100/60 leading-relaxed">
+                By removing high-intensity physical contact, we shift the focus to <strong>technical skill and spacing</strong>. This eliminates the intimidation factor for students of all genders and sizes.
+              </p>
+            </motion.div>
+
+            {/* Rule 2: Beginner Friendly */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="p-8 bg-emerald-900/40 backdrop-blur-sm border border-emerald-500/20 rounded-[2.5rem] group hover:bg-emerald-800/50 transition-colors"
+            >
+              <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-8 -rotate-3 group-hover:rotate-0 transition-transform">
+                <BookOpen className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Confidence First</h3>
+              <p className="text-emerald-100/60 leading-relaxed mb-6">
+                We've established a "Beginner's Corner" to provide confidence tips, ensuring that <strong>the pitch is a place for learning</strong>, not just for elite performance.
+              </p>
+              <div className="space-y-3">
+                <div className="flex gap-3 items-center text-sm bg-emerald-950/40 p-3 rounded-xl border border-emerald-500/10">
+                  <div className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-[10px] font-bold">1</div>
+                  Focus on the flow, not the score.
+                </div>
+                <div className="flex gap-3 items-center text-sm bg-emerald-950/40 p-3 rounded-xl border border-emerald-500/10">
+                  <div className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-[10px] font-bold">2</div>
+                  Lower intensity means more space.
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Rule 3: Visual Equity */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="p-8 bg-white text-zinc-900 rounded-[2.5rem] shadow-2xl"
+            >
+              <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-8">
+                <BarChart3 className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Equitable Access</h3>
+              <p className="text-zinc-500 leading-relaxed mb-8">
+                Our goal is to rebalance the <strong>80/20 occupancy ratio</strong>. By creating a regulated mixed-gender space, we ensure every student gets a fair turn at the center.
+              </p>
+              
+              <div className="bg-zinc-50 p-6 rounded-2xl border border-zinc-100">
+                <p className="text-[10px] font-black uppercase text-zinc-400 tracking-widest mb-4">Current Participation</p>
+                <div className="h-3 w-full bg-zinc-200 rounded-full flex overflow-hidden">
+                  <div className="bg-emerald-500 w-[20%]" />
+                  <div className="border-l-2 border-white w-[1px]" />
+                  <div className="bg-zinc-300 w-[80%]" />
+                </div>
+                <div className="flex justify-between mt-3">
+                  <span className="text-xs font-bold text-emerald-600">Female (20%)</span>
+                  <span className="text-xs font-bold text-zinc-400">Male (80%)</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Call to Action for Solution */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="mt-16 p-10 bg-linear-to-r from-emerald-500 to-emerald-600 rounded-[3rem] text-center"
+          >
+            <h4 className="text-3xl font-bold">"Respecting the 'No-Contact' rule has actually made me a better technical player."</h4>
+          </motion.div>
         </div>
       </SectionContainer>
 
@@ -367,117 +623,102 @@ export default function App() {
           </div>
 
           <div className="lg:col-start-3 lg:col-span-8 bg-white p-10 rounded-[3rem] shadow-xl shadow-emerald-200/50">
-            <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
-              <div>
-                <label className="block text-sm font-bold text-zinc-500 uppercase tracking-widest mb-3">
-                  How do you feel about the current field atmosphere?
-                </label>
-                <div className="grid grid-cols-3 gap-3">
-                  {['Intimidating', 'Neutral', 'Welcoming'].map(v => (
-                    <button key={v} type="button" className="py-3 px-4 rounded-2xl border border-zinc-200 hover:border-emerald-500 hover:bg-emerald-50 transition-all text-sm font-medium">
-                      {v}
-                    </button>
-                  ))}
+            {feedbackSuccess ? (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center py-12"
+              >
+                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <ShieldCheck className="w-8 h-8" />
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-zinc-500 uppercase tracking-widest mb-3">
-                  What would make you feel more "welcome"?
-                </label>
-                <textarea 
-                  className="w-full h-32 p-4 rounded-2xl border border-zinc-200 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-hidden resize-none"
-                  placeholder="Share your thoughts here..."
-                ></textarea>
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-zinc-500 uppercase tracking-widest mb-3">
-                  Report any issues
-                </label>
-                <input 
-                  type="text" 
-                  className="w-full p-4 rounded-2xl border border-zinc-200 focus:ring-2 focus:ring-emerald-500 outline-hidden"
-                  placeholder="Optional..."
-                />
-              </div>
-
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-4">
-                <div className="flex items-center gap-2 text-zinc-400 text-xs italic">
-                  <ShieldCheck className="w-4 h-4" />
-                  Note: Names are never collected. Your response is 100% anonymous.
-                </div>
-                <button className="bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-emerald-700 transition-colors">
-                  <Send className="w-4 h-4" /> Submit Feedback
+                <h3 className="text-2xl font-bold mb-2">Thank you!</h3>
+                <p className="text-zinc-500">Your feedback has been submitted anonymously.</p>
+                <button 
+                  onClick={() => setFeedbackSuccess(false)}
+                  className="mt-8 text-emerald-600 font-bold hover:underline"
+                >
+                  Send another?
                 </button>
-              </div>
-            </form>
+              </motion.div>
+            ) : (
+              <form className="space-y-8" onSubmit={handleSubmit}>
+                <div>
+                  <label className="block text-sm font-bold text-zinc-500 uppercase tracking-widest mb-3">
+                    How do you feel about the current field atmosphere?
+                  </label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {['Intimidating', 'Neutral', 'Welcoming'].map(v => (
+                      <button 
+                        key={v} 
+                        type="button" 
+                        onClick={() => setAtmosphere(v)}
+                        className={`py-3 px-4 rounded-2xl border transition-all text-sm font-medium ${
+                          atmosphere === v 
+                            ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow-sm' 
+                            : 'border-zinc-200 hover:border-emerald-300 bg-white text-zinc-600'
+                        }`}
+                      >
+                        {v}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-zinc-500 uppercase tracking-widest mb-3">
+                    What would make you feel more "welcome"?
+                  </label>
+                  <textarea 
+                    required
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="w-full h-32 p-4 rounded-2xl border border-zinc-200 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-hidden resize-none"
+                    placeholder="Share your thoughts here..."
+                  ></textarea>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-zinc-500 uppercase tracking-widest mb-3">
+                    Report any issues
+                  </label>
+                  <input 
+                    type="text" 
+                    value={issue}
+                    onChange={(e) => setIssue(e.target.value)}
+                    className="w-full p-4 rounded-2xl border border-zinc-200 focus:ring-2 focus:ring-emerald-500 outline-hidden"
+                    placeholder="Optional..."
+                  />
+                </div>
+
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-4">
+                  <div className="flex items-center gap-2 text-zinc-400 text-xs italic">
+                    <ShieldCheck className="w-4 h-4" />
+                    Note: Names are never collected. Your response is 100% anonymous.
+                  </div>
+                  <button 
+                    disabled={isSubmitting}
+                    className="bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-emerald-700 transition-colors disabled:opacity-50"
+                  >
+                    {isSubmitting ? (
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4" />
+                    )}
+                    Submit Feedback
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </section>
 
-      {/* --- AWARENESS & EDUCATION --- */}
-      <SectionContainer id="awareness">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-          <div className="lg:col-span-5">
-            <span className="text-emerald-600 font-mono text-sm tracking-widest uppercase mb-2 block">Awareness & Education</span>
-            <h2 className="text-5xl font-bold mb-8 leading-tight">Fairness Starts with Understanding.</h2>
-            
-            <div className="space-y-6">
-              <div className="p-6 bg-white border border-zinc-200 rounded-2xl">
-                <h3 className="flex items-center gap-2 font-bold mb-2">
-                  <ShieldCheck className="w-5 h-5 text-emerald-600" /> "No-Contact" Explained
-                </h3>
-                <p className="text-sm text-zinc-500">
-                  Low-intensity play focuses on spacing and skill rather than physical dominance. No sliding tackles or aggressive shoulder-barging.
-                </p>
-              </div>
-              <div className="p-6 bg-white border border-zinc-200 rounded-2xl">
-                <h3 className="flex items-center gap-2 font-bold mb-2">
-                  <BarChart3 className="w-5 h-5 text-emerald-600" /> Utilization Info
-                </h3>
-                <div className="h-4 w-full bg-zinc-100 rounded-full mt-4 overflow-hidden flex">
-                  <div className="bg-emerald-500 w-[20%]" />
-                  <div className="bg-zinc-300 w-[80%]" />
-                </div>
-                <p className="text-xs text-zinc-400 mt-2">Current pitch usage: 20% Female vs 80% Male (Observation Study)</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-7">
-            <div className="aspect-video bg-zinc-900 rounded-[2rem] overflow-hidden relative shadow-2xl shadow-emerald-900/20">
-              <img 
-                src={fieldImg} 
-                className="w-full h-full object-cover" 
-                alt="Educational Gallery"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-zinc-900/80 via-transparent to-transparent" />
-              <div className="absolute bottom-8 left-8 right-8">
-                <p className="text-white font-bold text-2xl uppercase tracking-widest mb-1">Educational Gallery</p>
-                <p className="text-white/70 text-lg">Promoting gender fairness in campus sports.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </SectionContainer>
-
       {/* --- ABOUT --- */}
       <SectionContainer id="about" className="bg-zinc-900 text-white rounded-t-[4rem]">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 py-12">
-          <div className="lg:col-span-7">
-            <h2 className="text-4xl font-bold mb-8">Why "Co-exist Pitch"?</h2>
-            <p className="text-zinc-400 text-lg leading-relaxed mb-8">
-              On our school soccer pitch, there is a clear gender imbalance in resource utilization. 
-              Observations, independently confirmed by ten of my fellow students, show that while the center is dominated by high-intensity male matches, female students are often relegated to the sidelines.
-            </p>
-            <p className="text-zinc-400 text-lg leading-relaxed">
-              This is not just about space; it is about social comfort. Many girls feel shy or self-conscious about accidental physical contact and the "performance pressure" of playing with experienced boys. 
-              This issue limits girls' opportunities to stay active and reinforces the stereotype that competitive sports are a male domain.
-            </p>
-          </div>
-
-          <div className="lg:col-span-5">
+        <div className="py-12">
+          <h2 className="text-4xl font-bold mb-12 text-center">About the Project</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="p-8 bg-zinc-800 rounded-3xl border border-zinc-700">
               <h3 className="font-bold text-emerald-400 mb-6 uppercase tracking-widest text-xs">The Team Credits</h3>
               <div className="grid grid-cols-2 gap-y-6">
@@ -498,6 +739,62 @@ export default function App() {
                   <p className="text-zinc-500 text-xs">Design & Logo</p>
                 </div>
               </div>
+            </div>
+
+            <div className="p-8 bg-zinc-800/50 rounded-3xl border border-zinc-700/50">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-bold text-zinc-400 uppercase tracking-widest text-xs">Admin Access</h3>
+                {user ? (
+                  <button onClick={() => signOut(auth!)} className="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1">
+                    <LogOut className="w-3 h-3" /> Logout
+                  </button>
+                ) : (
+                  <div className="flex flex-col items-end gap-2">
+                    <button onClick={handleSignIn} className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
+                      <Lock className="w-3 h-3" /> Owner Login
+                    </button>
+                    {authError && (
+                      <p className="text-[10px] text-rose-400 text-right max-w-[200px] leading-tight">
+                        {authError}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+              
+              {user ? (
+                <div className="space-y-4 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
+                  <p className="text-xs text-zinc-500 mb-4">Viewing {feedbacks.length} submissions</p>
+                  {feedbacks.length === 0 ? (
+                    <p className="text-sm text-zinc-600 italic">No submissions yet.</p>
+                  ) : (
+                    feedbacks.map((f, i) => (
+                      <div key={f.id || i} className="p-4 bg-zinc-900 rounded-2xl border border-zinc-700">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${
+                            f.atmosphere === 'Welcoming' ? 'bg-emerald-500/10 text-emerald-400' : 
+                            f.atmosphere === 'Neutral' ? 'bg-zinc-500/10 text-zinc-400' : 'bg-rose-500/10 text-rose-400'
+                          }`}>
+                            {f.atmosphere}
+                          </span>
+                          <span className="text-[10px] text-zinc-600">
+                            {f.createdAt?.toDate ? f.createdAt.toDate().toLocaleDateString() : 'Just now'}
+                          </span>
+                        </div>
+                        <p className="text-sm text-zinc-200 mb-2 leading-relaxed">{f.content}</p>
+                        {f.issue && (
+                          <div className="mt-2 pt-2 border-t border-zinc-800 flex items-start gap-2">
+                            <Info className="w-3 h-3 text-rose-400 mt-0.5" />
+                            <p className="text-xs text-zinc-500">Issue: {f.issue}</p>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-zinc-600">Login with Google to view anonymous feedback submissions.</p>
+              )}
             </div>
           </div>
         </div>
