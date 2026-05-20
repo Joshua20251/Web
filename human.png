@@ -134,6 +134,18 @@ export default function App() {
   const [content, setContent] = useState('');
   const [issue, setIssue] = useState('');
 
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  const handleSignIn = async () => {
+    setAuthError(null);
+    try {
+      await signIn();
+    } catch (error: any) {
+      console.error(error);
+      setAuthError(error.message || 'Failed to sign in');
+    }
+  };
+
   useEffect(() => {
     if (!auth) return;
     const unsub = onAuthStateChanged(auth, (u) => {
@@ -737,9 +749,16 @@ export default function App() {
                     <LogOut className="w-3 h-3" /> Logout
                   </button>
                 ) : (
-                  <button onClick={signIn} className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
-                    <Lock className="w-3 h-3" /> Owner Login
-                  </button>
+                  <div className="flex flex-col items-end gap-2">
+                    <button onClick={handleSignIn} className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
+                      <Lock className="w-3 h-3" /> Owner Login
+                    </button>
+                    {authError && (
+                      <p className="text-[10px] text-rose-400 text-right max-w-[200px] leading-tight">
+                        {authError}
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
               

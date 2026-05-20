@@ -1,8 +1,35 @@
-node_modules/
-build/
-dist/
-coverage/
-.DS_Store
-*.log
-.env*
-!.env.example
+{
+  "entities": {
+    "feedback": {
+      "title": "Feedback",
+      "description": "An anonymous feedback submission.",
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "The feedback message."
+        },
+        "atmosphere": {
+          "type": "string",
+          "description": "User's perception of the pitch atmosphere."
+        },
+        "issue": {
+          "type": "string",
+          "description": "Specific issue reported."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the feedback was submitted."
+        }
+      },
+      "required": ["content", "atmosphere", "issue", "createdAt"]
+    }
+  },
+  "firestore": {
+    "feedbacks": {
+      "schema": "feedback",
+      "description": "Collection of anonymous feedbacks."
+    }
+  }
+}

@@ -1,15 +1,6 @@
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Default deny
-    match /{document=**} {
-      allow read, write: if false;
-    }
-
-    // Feedback collection
-    match /feedbacks/{feedbackId} {
-      allow create: if true; // Anyone can submit anonymous feedback
-      allow get, list: if request.auth != null; // Only authenticated users (admins) can read
-    }
-  }
+{
+  "name": "Co-exist Pitch",
+  "description": "A platform dedicated to creating an inclusive, gender-balanced soccer pitch culture in schools.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
