@@ -1,0 +1,82 @@
+{
+  "entities": {
+    "feedback": {
+      "title": "Feedback",
+      "description": "An anonymous feedback submission.",
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "The feedback message."
+        },
+        "atmosphere": {
+          "type": "string",
+          "description": "User's perception of the pitch atmosphere."
+        },
+        "issue": {
+          "type": "string",
+          "description": "Specific issue reported."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the feedback was submitted."
+        }
+      },
+      "required": ["content", "atmosphere", "issue", "createdAt"]
+    },
+    "survey": {
+      "title": "Survey",
+      "description": "An anonymous pitch inclusivity survey submission.",
+      "type": "object",
+      "properties": {
+        "gender": {
+          "type": "string",
+          "description": "Respondent's gender (Male, Female, Prefer not to say)."
+        },
+        "grade": {
+          "type": "string",
+          "description": "Respondent's grade level."
+        },
+        "playFrequency": {
+          "type": "string",
+          "description": "Frequency of playing sports on the pitch."
+        },
+        "timeSlots": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Preferred time slots."
+        },
+        "neutralRating": {
+          "type": "number",
+          "description": "Rating of pitch friendliness (1-5)."
+        },
+        "barriers": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Barriers to playing sports."
+        },
+        "additionalFeedback": {
+          "type": "string",
+          "description": "Optional open text feedback."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Submission timestamp."
+        }
+      },
+      "required": ["gender", "grade", "playFrequency", "timeSlots", "neutralRating", "barriers", "additionalFeedback", "createdAt"]
+    }
+  },
+  "firestore": {
+    "feedbacks": {
+      "schema": "feedback",
+      "description": "Collection of anonymous feedbacks."
+    },
+    "surveys": {
+      "schema": "survey",
+      "description": "Collection of anonymous surveys."
+    }
+  }
+}
