@@ -1,10 +1,9 @@
-{
-  "projectId": "the-co-exist-pitch",
-  "appId": "1:484809609741:web:b163cad6dd932f2e823b44",
-  "apiKey": "AIzaSyCUV2f1abHg5zPHCt8s4x08wKRS4EM6hJ8",
-  "authDomain": "the-co-exist-pitch.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-39bbf0d3-208a-48c9-8423-699d6c00f997",
-  "storageBucket": "the-co-exist-pitch.firebasestorage.app",
-  "messagingSenderId": "484809609741",
-  "measurementId": ""
-}
+# GEMINI_API_KEY: Required for Gemini AI API calls.
+# AI Studio automatically injects this at runtime from user secrets.
+# Users configure this via the Secrets panel in the AI Studio UI.
+GEMINI_API_KEY="MY_GEMINI_API_KEY"
+
+# APP_URL: The URL where this applet is hosted.
+# AI Studio automatically injects this at runtime with the Cloud Run service URL.
+# Used for self-referential links, OAuth callbacks, and API endpoints.
+APP_URL="MY_APP_URL"
